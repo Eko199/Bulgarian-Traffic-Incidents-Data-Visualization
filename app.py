@@ -7,7 +7,7 @@ import graphMaker as gm
 from streamlit_folium import st_folium
 
 
-st.set_page_config(page_title="ПТП данни", layout="wide")
+st.set_page_config(page_title="ПТП данни", layout="centered")
 
 st.title("Визуализация на данни за ПТП в България от 01.01.2025 г. до 30.06.2025 г.")
 
