@@ -1,10 +1,11 @@
 import plotly.express as px
 import pandas as pd
-from dataConverter import DATA_DAYS, DATA_ALL_HOURS
+from dataConverter import DATA_DAYS, DATA_ALL_HOURS, get_provinces_GeoJSON, get_nuts3, get_ptp_regions_data
+
 #Map imports
-import json
 import folium
-from branca.colormap import linear
+import branca.colormap as cm
+
 def make_pie_chart(_values='Брой ПТП' , _title='брой ПТП'):
     df = pd.DataFrame(DATA_DAYS)
     fig = px.pie(df, values=_values , names='ден',
@@ -73,20 +74,13 @@ def make_bar_chart(options):
     )
     return fig
 
-def map():
-    
-
+def map(option: str) -> folium.Map:
     m = folium.Map(location=[42.7, 25.4], zoom_start=7, tiles="CartoDB positron")
 
-    with open("resources/provinces.geojson", encoding="utf-8") as f:
-        provinces = json.load(f)
-
-    with open("resources/ek_obl.json", encoding="utf-8") as f:
-        nuts3 = json.load(f)
-
-    with open("resources/ptp01.01-30.06.2025.json", encoding="utf-8") as f:
-        ptp = json.load(f)
-
+    provinces: dict = get_provinces_GeoJSON()
+    nuts3: dict = get_nuts3()
+    ptp: dict = get_ptp_regions_data()
+    
     def sofia_fix(name: str) -> str:
         if name.lower() == "софийска":
             return "софия"
@@ -95,11 +89,19 @@ def map():
             return "софия (столица)"
         
         return name.lower()
+    
+    is_percentage: bool = option.strip().endswith("%")
+    
+    def value_map(val: str) -> int:
+            return int(float(val) * 100) if is_percentage else int(val)
 
-    stats = { sofia_fix(item[0]) : int(item[1]) for item in ptp[1:-1] }
+    stats = { sofia_fix(item[0]) : value_map(item[ptp[0].index(option)]) for item in ptp[1:-1] }
 
-    colormap = linear.YlOrBr_06.scale(0, max(stats.values()) * 1.1)
-    colormap.caption = "Брой на ПТП по области за периода 01-06.2025г."
+    colormap = cm.LinearColormap(["green", "yellow", "red"], vmin=vmin, vmax=max(stats.values())) \
+            if (vmin := min(stats.values())) < 0 else \
+            cm.linear.YlOrBr_06.scale(0, max(stats.values()))
+    
+    colormap.caption = option
 
     for feature in provinces["features"]:
         name = next(o for o in nuts3 if o["oblast"] == feature["properties"]["nuts3"])["name"]
@@ -119,15 +121,12 @@ def map():
                 "color": "yellow"
             },
             tooltip=folium.Tooltip(
-                f"<b>{name}</b><br>Value: {value}",
+                f"<b>{name}</b><br>{value}%" if is_percentage else f"<b>{name}</b><br>Брой: {value}",
                 sticky=True
             ),
         ).add_to(m)
 
     m.add_child(colormap)
-
     #m.save("bg_map.html")
 
     return m
-
-    

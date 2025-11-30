@@ -4,7 +4,7 @@ DATA_HOUR={}
 DATA_DAYS={}
 DATA_ALL_HOURS={}
 WEEKDAYS=["Понеделник","Вторник","Сряда","Четвъртък","Петък","Събота","Неделя"]
-with open("data_hours.json","r",encoding="utf-8") as file:
+with open("resources/data_hours.json", "r", encoding="utf-8") as file:
     data=json.load(file)
     i=1
     for day in WEEKDAYS:
@@ -20,6 +20,18 @@ with open("data_hours.json","r",encoding="utf-8") as file:
         DATA_ALL_HOURS[data[0][-3+i]]=[int(data[k][-3+i]) for k in range(1,len(data)-1)]
         
 
+def load_json(file_path: str) -> dict:
+    with open(file_path, encoding="utf-8") as f:
+        return json.load(f)
+
+def get_provinces_GeoJSON() -> dict:
+    return load_json("resources/provinces.geojson")
+    
+def get_nuts3() -> dict:
+    return load_json("resources/ek_obl.json")
+    
+def get_ptp_regions_data() -> dict:
+    return load_json("resources/ptp01.01-30.06.2025.json")
 
 print(DATA_ALL_HOURS) 
 #print(type(DATA_DAYS["Загинали"][2]))
