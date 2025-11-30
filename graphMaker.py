@@ -128,6 +128,6 @@ def map():
 
     #m.save("bg_map.html")
 
-    return m;
+    return m
 
     

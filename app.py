@@ -1,19 +1,25 @@
-# app.py
 import streamlit as st
-import time
 import analogueClock as ac
 import dataConverter as dc
 import graphMaker as gm
 from streamlit_folium import st_folium
 
-
 st.set_page_config(page_title="ПТП данни", layout="centered")
+
+st.html("""
+    <style>
+        .stMainBlockContainer {
+            max-width:50%;
+        }
+    </style>
+    """
+)
 
 st.title("Визуализация на данни за ПТП в България от 01.01.2025 г. до 30.06.2025 г.")
 
 placeholder = st.empty()
 
-st.markdown("<h3 style='text-align: center; color: black;'>Брой ПТП в часови интервал за ден от седмицата</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center;'>Брой ПТП в часови интервал за ден от седмицата</h3>", unsafe_allow_html=True)
 
 
 #Day selector
@@ -37,7 +43,7 @@ with col2:
     st.pyplot(fig_pm)
 
 #Color legend 
-st.markdown("<h6 style='text-align: center; color: black;'>Легенда за цветове - Брой ПТП</h6>", unsafe_allow_html=True)
+st.markdown("<h6 style='text-align: center;'>Легенда за цветове - Брой ПТП</h6>", unsafe_allow_html=True)
 
 legend_labels = [
     "0-3", "4-7", "8-14", "15-25", "26-35", "36-45", "46-50", ">51"
@@ -64,12 +70,12 @@ for i, label in enumerate(legend_labels):
 st.header("Разпределение по дни от седмицата")
 c1,c2=st.columns(2)
 with c1:
-    st.plotly_chart(gm.make_pie_chart(), use_container_width=True)
+    st.plotly_chart(gm.make_pie_chart(), width='stretch')
 with c2:
-    st.plotly_chart(gm.make_pie_chart(_values='Ранени', _title='ранени'), use_container_width=True)    
+    st.plotly_chart(gm.make_pie_chart(_values='Ранени', _title='ранени'), width='stretch')    
 
-st.markdown("<h5 style='text-align: center; color: black;'>загинали</h5>", unsafe_allow_html=True)
-st.plotly_chart(gm.make_pie_chart(_values='Загинали', _title=''), use_container_width=True)
+st.markdown("<h5 style='text-align: center;'>загинали</h5>", unsafe_allow_html=True)
+st.plotly_chart(gm.make_pie_chart(_values='Загинали', _title=''), width='stretch')
 
 st.header("🚦 ПТП по часове")
 
@@ -84,11 +90,11 @@ if not options:
     st.stop()
 
 st.header("ПТП по часове — Анимирана графика")
-st.plotly_chart(gm.make_bar_chart_animated(options), use_container_width=True)  
+st.plotly_chart(gm.make_bar_chart_animated(options), width='stretch')  
 
 st.header("ПТП по часове — графика")
-st.plotly_chart(gm.make_bar_chart(options), use_container_width=True)
+st.plotly_chart(gm.make_bar_chart(options), width='stretch')
 
 st.header("Карта на България с ПТП по области (01.01.2025 - 30.06.2025)")
-st_data = st_folium(gm.map(), width=1225, height=700)
+st_data = st_folium(gm.map(), width='stretch', height=700)
 
