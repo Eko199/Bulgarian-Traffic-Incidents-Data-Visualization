@@ -3,7 +3,7 @@ import analogueClock as ac
 import dataConverter as dc
 import graphMaker as gm
 from streamlit_folium import st_folium
-from dataConverter import get_ptp_regions_data
+from dataConverter import get_ptp_regions_data, get_ptp_regions_data_months
 
 st.set_page_config(page_title="ПТП данни", layout="centered")
 
@@ -98,9 +98,14 @@ st.plotly_chart(gm.make_bar_chart(options), width='stretch')
 
 st.header("Карта на България с ПТП по области (01.01.2025 - 30.06.2025)")
 
-option = st.selectbox(
-    "Изберете показател за визуализация:",
-    get_ptp_regions_data()[0][1:]
+month: str = st.selectbox(
+    "Изберете месец за визуализация:",
+    ["Всички"] + get_ptp_regions_data_months()[0][1:-1]  # Adding "All" option at the beginning
 )
 
-st_data = st_folium(gm.map(option), width='stretch', height=700)
+option: str | None = st.selectbox(
+    "Изберете показател за визуализация:",
+    get_ptp_regions_data()[0][1:]
+) if month == "Всички" else None
+
+st_data = st_folium(gm.map(month, option), width='stretch', height=700)

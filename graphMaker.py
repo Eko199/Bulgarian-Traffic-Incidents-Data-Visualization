@@ -1,6 +1,6 @@
 import plotly.express as px
 import pandas as pd
-from dataConverter import DATA_DAYS, DATA_ALL_HOURS, get_provinces_GeoJSON, get_nuts3, get_ptp_regions_data
+from dataConverter import DATA_DAYS, DATA_ALL_HOURS, get_provinces_GeoJSON, get_nuts3, get_ptp_regions_data, get_ptp_regions_data_months
 
 #Map imports
 import folium
@@ -74,13 +74,14 @@ def make_bar_chart(options):
     )
     return fig
 
-def map(option: str) -> folium.Map:
+def map(month: str, option: str | None) -> folium.Map:
     m = folium.Map(location=[42.7, 25.4], zoom_start=7, tiles="CartoDB positron")
 
     provinces: dict = get_provinces_GeoJSON()
     nuts3: dict = get_nuts3()
-    ptp: dict = get_ptp_regions_data()
-    
+
+    ptp_months: dict = get_ptp_regions_data_months()
+
     def sofia_fix(name: str) -> str:
         if name.lower() == "софийска":
             return "софия"
@@ -90,18 +91,26 @@ def map(option: str) -> folium.Map:
         
         return name.lower()
     
-    is_percentage: bool = option.strip().endswith("%")
-    
-    def value_map(val: str) -> int:
-            return int(float(val) * 100) if is_percentage else int(val)
+    is_percentage: bool = option.strip().endswith("%") if option is not None else False
+    month_i: int = ptp_months[0].index(month) if month in ptp_months[0] else -1
 
-    stats = { sofia_fix(item[0]) : value_map(item[ptp[0].index(option)]) for item in ptp[1:-1] }
+    if month_i != -1:
+        stats = { sofia_fix(item[0]) : int(item[month_i]) for item in ptp_months[1:-1] }
+    elif option is None:
+        return m
+    else:
+        ptp: dict = get_ptp_regions_data()
+        
+        def value_map(val: str) -> int:
+                return int(float(val) * 100) if is_percentage else int(val)
+
+        stats = { sofia_fix(item[0]) : value_map(item[ptp[0].index(option)]) for item in ptp[1:-1] }
 
     colormap = cm.LinearColormap(["green", "yellow", "red"], vmin=vmin, vmax=max(stats.values())) \
             if (vmin := min(stats.values())) < 0 else \
             cm.linear.YlOrBr_06.scale(0, max(stats.values()))
     
-    colormap.caption = option
+    colormap.caption = option if option is not None else f"ПТП данни за 2025 през {month}"
 
     for feature in provinces["features"]:
         name = next(o for o in nuts3 if o["oblast"] == feature["properties"]["nuts3"])["name"]
@@ -127,6 +136,4 @@ def map(option: str) -> folium.Map:
         ).add_to(m)
 
     m.add_child(colormap)
-    #m.save("bg_map.html")
-
     return m
