@@ -60,22 +60,19 @@ for i, label in enumerate(legend_labels):
             f"""
             <div style='text-align:center'>
                 <div style='background-color:{ac.colorsDay[i]};height:15px;margin-bottom:2px'></div>
-                <div style='background-color:{ac.colorsNight[i]};height:15px;margin-bottom:2px'></div>
                 <div style='font-size:12px'>{label}</div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-#Display pie charts side by side
 st.header("Разпределение по дни от седмицата")
-c1,c2=st.columns(2)
-with c1:
-    st.plotly_chart(gm.make_pie_chart(), width='stretch')
-with c2:
-    st.plotly_chart(gm.make_pie_chart(_values='Ранени', _title='ранени'), width='stretch')    
+st.markdown("<h4 style='text-align: left;'>брой ПТП</h4>", unsafe_allow_html=True)
+st.plotly_chart(gm.make_pie_chart(_title=""), width='stretch')
+st.markdown("<h4 style='text-align: left;'>ранени</h4>", unsafe_allow_html=True)
+st.plotly_chart(gm.make_pie_chart(_values='Ранени', _title=''), width='stretch')    
 
-st.markdown("<h5 style='text-align: center;'>загинали</h5>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: left;'>загинали</h4>", unsafe_allow_html=True)
 st.plotly_chart(gm.make_pie_chart(_values='Загинали', _title=''), width='stretch')
 
 st.header("🚦 ПТП по часове")

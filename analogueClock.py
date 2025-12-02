@@ -19,8 +19,8 @@ import datetime as dt
 colorsNight = ['#81D4FA', '#7986CB', '#673AB7', '#8E24AA', '#FF69B4',
             '#C2185B', '#D32F2F', '#616161']
 
-colorsDay = ['#7CB342', '#AED581', '#FFEE58', '#F9A825', '#FF6F00', 
-            '#F4511E', '#BF360C', '#75240C']
+colorsDay = ["#1A9426",'#7CB342', '#AED581', '#FFEE58', '#F9A825',  
+            '#F4511E', '#CF0C0C', '#75240C']
 
 def analogue_clock(data,time):
     # Define your closure here
@@ -91,7 +91,7 @@ def analogue_clock(data,time):
     ax_carthesian.set_ylim(-r_s-1,r_s+1)
 
     if(time == "pm"):
-        colors = colorsNight
+        colors = colorsDay
         data=data[12:]
     elif(time == "am"):
         colors = colorsDay

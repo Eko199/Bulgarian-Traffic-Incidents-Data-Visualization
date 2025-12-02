@@ -4,6 +4,11 @@ DATA_HOUR={}
 DATA_DAYS={}
 DATA_ALL_HOURS={}
 WEEKDAYS=["Понеделник","Вторник","Сряда","Четвъртък","Петък","Събота","Неделя"]
+
+def hour_cleaner(hour):
+    hour=hour.replace("От ","")
+    hour=hour.replace(" До ",":00-")
+    return hour
 with open("resources/data_hours.json", "r", encoding="utf-8") as file:
     data=json.load(file)
     i=1
@@ -15,7 +20,7 @@ with open("resources/data_hours.json", "r", encoding="utf-8") as file:
         DATA_DAYS["Ранени"]=[int(data[-1][j]) for j in range(3,22,3)]
         DATA_DAYS["Загинали"]=[int(data[-1][j]) for j in range(2,22,3)]
 
-    DATA_ALL_HOURS["час"]=[data[k][0] for k in range(1,len(data)-1)]
+    DATA_ALL_HOURS["час"]=[hour_cleaner(data[k][0]) for k in range(1,len(data)-1)]
     for i in range(3):
         DATA_ALL_HOURS[data[0][-3+i]]=[int(data[k][-3+i]) for k in range(1,len(data)-1)]
         
