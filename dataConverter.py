@@ -36,7 +36,17 @@ def get_nuts3() -> dict:
     return load_json("resources/ek_obl.json")
     
 def get_ptp_regions_data() -> dict:
-    return load_json("resources/ptp01.01-30.06.2025.json")
+    ptp = load_json("resources/ptp01.01-30.06.2025.json")
+
+    for i in range(1, len(ptp[0])):
+        if "разлика" in ptp[0][i].lower():
+            ptp[0][i] = ptp[0][i].replace("разлика", "разлика (спрямо миналата година)")
+            ptp[0][i] = ptp[0][i].replace("Разлика", "Разлика (спрямо миналата година)")
+
+    return ptp
+
+def get_ptp_regions_data_months() -> dict:
+    return load_json("resources/ptp01.01-30.06.2025_months.json")
 
 print(DATA_ALL_HOURS) 
 #print(type(DATA_DAYS["Загинали"][2]))
