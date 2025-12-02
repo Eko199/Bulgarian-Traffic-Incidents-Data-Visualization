@@ -48,5 +48,5 @@ def get_ptp_regions_data() -> dict:
 def get_ptp_regions_data_months() -> dict:
     return load_json("resources/ptp01.01-30.06.2025_months.json")
 
-print(DATA_ALL_HOURS) 
+#print(DATA_ALL_HOURS) 
 #print(type(DATA_DAYS["Загинали"][2]))
