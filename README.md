@@ -10,6 +10,15 @@ A lightweight Streamlit app for exploring Bulgaria’s public traffic-incident d
 - Analog clocks with matplotlib: https://github.com/ibskhan4/clocks
 - Bulgarian provinces GeoJSON: https://github.com/yurukov/Bulgaria-geocoding
 
+## Packages Used - License :
+* numpy - BSD 3-Clause 
+* pandas - BSD 3-Clause
+* plotly - MIT
+* matplotlib - BSD-style 
+* folium - MIT  
+* streamlit - Apache 2.0
+
+
 <br>
 
 # Визуализация на отворени данни за брой ПТП в България
@@ -23,3 +32,12 @@ Web приложение на Streamlit за проучване на данни 
 - Данни за ПТП: https://data.egov.bg
 - Аналогови часовници с matplotlib: https://github.com/ibskhan4/clocks
 - GeoJSON на българските области: https://github.com/yurukov/Bulgaria-geocoding
+
+## Използвани библютеки - Лиценз:
+* numpy - BSD 3-Clause 
+* pandas - BSD 3-Clause
+* plotly - MIT
+* matplotlib - BSD-style 
+* folium - MIT  
+* streamlit - Apache 2.0
+  
